@@ -1,0 +1,980 @@
+/* ---------- ANIMAZIONE GLOBALE ---------- */
+.fade-anim {
+  animation: fadeInUp 0.8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- GLOBAL ---------- */
+body, html, #root {
+  margin: 0;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f4f4f9;
+  color: #1c1b29;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+}
+
+
+/* Uniforma il font dei placeholder in tutti i campi */
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  font-family: 'Montserrat', sans-serif; /* lo stesso font dei campi */
+  color: #aaa; /* opzionale, colore simile agli altri placeholder */
+  font-weight: 400; /* opzionale, stesso peso del testo normale */
+}
+
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #1c1b29;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.navbar-logo img {
+  height: 80px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.navbar-logo img:hover {
+  transform: scale(1.05);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-links a {
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.navbar-links a:hover {
+  border: 2px solid #f39c12;
+  background-color: rgba(243, 156, 18, 0.1);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.navbar-links-mobile {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #1c1b29;
+  width: 200px;
+  border-radius: 8px;
+  padding: 1rem;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+}
+
+.navbar-links-mobile.open {
+  display: flex;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+}
+
+/* Overlay fullscreen hamburger */
+.navbar-links-mobile.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(28, 27, 41, 0.95);
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.navbar-links-mobile.overlay.open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.navbar-links-mobile.overlay a {
+  font-size: 2rem;
+  color: white;
+  font-weight: 600;
+}
+
+.navbar-links-mobile.overlay a:hover {
+  color: #f39c12;
+}
+
+/* ---------- MOBILE FULLSCREEN HAMBURGER ---------- */
+.navbar-links-mobile {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(28, 27, 41, 0.95); /* sfondo opacizzato */
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(-20px); /* parte leggermente sopra */
+  z-index: 9999;
+}
+
+/* Stato aperto */
+.navbar-links-mobile.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0); /* animazione entrata */
+}
+
+/* Link grandi */
+.navbar-links-mobile a {
+  font-size: 2rem;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.navbar-links-mobile a:hover {
+  color: #f39c12;
+}
+
+
+/* Blocca lo scrolling della pagina sottostante */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* Pulsante chiudi “X” */
+.navbar-links-mobile .close-menu {
+  display: block;
+  text-align: center;
+  font-size: 4rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.navbar-links-mobile .close-menu:hover {
+  color: #f39c12;
+}
+
+
+
+/* ---------- HOME ---------- */
+.home-page {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.home-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1c1b29;
+}
+
+.home-page p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 1rem auto;
+  color: #555;
+}
+
+.home-images {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.home-images img {
+  width: 30%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.home-images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 600px) {
+  .home-images {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  .home-images img {
+    width: 80%;
+  }
+}
+
+/* ---------- ABOUT ---------- */
+.about-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px); /* altezza schermo meno navbar */
+}
+
+.about-card {
+  background-color: #fff;
+  padding: 1rem
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+
+/* ---------- CARDS (Booking / Contact) ---------- */
+.contact-page,
+.booking-page
+.about-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+  padding: 1.5rem;
+}
+
+.contact-card,
+.booking-container {
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  max-width: 900px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.booking-fields,
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.contact-form input,
+.contact-form textarea,
+.booking-input,
+.booking-page input {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.contact-form textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus,
+.booking-input:focus,
+.booking-page input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59,130,246,0.4);
+  outline: none;
+}
+
+.btn-book,
+.btn-submit {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #facc15, #f97316);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.btn-book:hover,
+.btn-submit:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+.status-message,
+.feedback {
+  text-align: center;
+  font-weight: 500;
+}
+
+.feedback.success {
+  color: green;
+}
+
+.feedback.error {
+  color: red;
+}
+
+@media (max-width: 600px) {
+  .contact-card,
+  .booking-container {
+    padding: 1.5rem;
+  }
+}
+
+/* ---------- CALENDAR / SLOT BUTTONS (MIGLIORATO) ---------- */
+.react-datepicker__month-container {
+    float: none !important;
+    margin: 0 auto; /* opzionale: centra il calendario */
+}
+
+.calendar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin: 1rem 0;
+  overflow: visible;
+  max-height: 500px;
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+.calendar-slot {
+  padding: 14px 22px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.calendar-slot:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.calendar-slot:active:not(:disabled) {
+  transform: scale(0.95);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.calendar-slot.occupied {
+  background: #ef4444 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.calendar-slot.calendar-selected {
+  background: linear-gradient(135deg, #facc15, #f97316);
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+.calendar-slot.calendar-selected:hover {
+  background: linear-gradient(135deg, #facc15, #f97316);
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+/* Media query per piccoli schermi */
+@media (max-width: 600px) {
+  .calendar-slot {
+    flex: 1 1 45%; /* due slot per riga, si adatta */
+    font-size: 0.95rem;
+    padding: 12px 18px;
+  }
+}
+
+
+/* ---------- FOOTER ---------- */
+.footer {
+  background-color: #1c1b29;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: #f39c12;
+  margin: 0 0.5rem;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #fff;
+}
+
+/* ---------- FEEDBACK POPUP ---------- */
+.feedback-popup {
+  position: fixed;
+  top: 440px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: white;
+  background-color: #f39c12;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s ease;
+  z-index: 10000;
+}
+
+.feedback-popup.success {
+  background-color: #10b981;
+}
+
+.feedback-popup.error {
+  background-color: #ef4444;
+}
+
+.feedback-popup.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+/* ---------- ABOUT ---------- */
+
+.about-section {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 
+}
+
+.about-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+flex-wrap: wrap; 
+}
+
+.about-image {
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  text-align: center;
+  }
+
+.about-image img {
+  width: 300px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.about-image img:hover {
+  transform: scale(1.05);
+}
+
+.about-name {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  color: #1c1b29;
+  font-style:italic;
+}
+
+.about-text {
+  flex: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.about-text.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-text h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: #1c1b29;
+  font-weight:bold;
+}
+
+.about-text p {
+  margin-bottom: 0.5rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  .about-image img {
+    width: 80%;
+    }
+
+  .about-text {
+    text-align: center;
+  }
+}
+
+
+/* ---------- LOADER ---------- */
+.loader-overlay,
+.splash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 30, 30, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.loader-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.loader-logo,
+.splash-logo {
+  width: 120px;
+  height: 120px;
+  animation: pulse 1.5s infinite ease-in-out;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); opacity: 0.7; }
+  50%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+/* Splash visibile subito */
+.splash-overlay {
+  background: #1c1b29; /* sfondo pieno per lo splash */
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 0.8s ease;
+}
+
+
+/* ---------- ADMIN ---------- */
+
+/* Container generale */
+.admin-page {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Titoli */
+.admin-page h2, .admin-page h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+/* Tabella desktop */
+.admin-page table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.admin-page table th,
+.admin-page table td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  vertical-align: middle;
+}
+
+.admin-page table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.admin-page table tr:hover {
+  background-color: #fafafa;
+  transition: background-color 0.2s ease;
+}
+
+/* Input, select, checkbox */
+/* Stile uniforme per tutti i campi input testo/email */
+.admin-page input[type="text"],
+.admin-page input[type="email"],
+.admin-page select {
+  width: 100%;
+  padding: 12px 10px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.admin-page input[type="text"]:focus,
+.admin-page input[type="email"]:focus,
+.admin-page select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52,152,219,0.3);
+}
+
+
+/* Checkbox con testo a sinistra attaccato */
+.add-booking label input[type="checkbox"] {
+  margin-left: 6px; /* distanza tra testo e checkbox */
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0px; /* distanza minima tra testo e checkbox */
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  transform: scale(1.2);
+  margin: 0;
+  margin-left: 6px; /* distanza tra testo e checkbox */
+}
+
+
+
+/* Pulsanti generici */
+.admin-page button {
+  padding: 10px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+/* Pulsanti specifici con gradient blu */
+button.edit,
+button.add-booking,
+.admin-login button {
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  color: white;
+}
+
+button.edit:hover,
+button.add-booking:hover,
+.admin-login button:hover {
+  background: linear-gradient(90deg, #2980b9, #3498db);
+  transform: translateY(-2px);
+}
+
+button.add-booking {
+  width: 100%;
+  padding: 10px 18px;
+  margin-top: 10px;
+}
+
+/* Pulsante delete uguale */
+button.delete {
+  /* Stessa struttura di calendar-slot */
+  padding: 14px 22px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+  /* Colore differente */
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+button.delete:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+button.delete:active:not(:disabled) {
+  transform: scale(0.95);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+button.delete:disabled {
+  background: #f87171;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+
+/* --- LOGIN ADMIN --- */
+
+.admin-login {
+  max-width: 400px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+
+  /* Centrare contenuti */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* verticale */
+  align-items: center;     /* orizzontale */
+  gap: 15px;               /* distanza tra elementi */
+}
+
+
+.admin-login input {
+  width: 100%;
+  padding: 12px 10px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.admin-login input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52,152,219,0.3);
+}
+
+/* Messaggio login fallito con animazione shake */
+.admin-login .error-message {
+  color: #e74c3c;
+  margin-top: 10px;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+/* --- Aggiungi prenotazione --- */
+.add-booking {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+  margin-bottom: 40px; /* spazio verso tabella/card */
+}
+
+.add-booking input:not([type="checkbox"]),
+.add-booking select {
+  flex: 1 1 200px;
+  min-width: 150px;
+}
+
+
+/* --- CARDS MOBILE --- */
+/* Mostra tabella desktop, nasconde card mobile di default */
+.desktop-table { display: block; }  /* o block se è un div contenitore */
+.mobile-cards { display: none; }
+
+
+@media (max-width: 768px) {
+  .desktop-table { display: none; }
+  .mobile-cards { display: block; }
+
+  .booking-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .booking-card:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  .booking-details {
+    display: none;
+    margin-top: 10px;
+    animation: expand 0.3s ease-in-out;
+  }
+
+  .booking-card.active .booking-details {
+    display: block;
+  }
+
+  .booking-card label {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+  }
+
+  .booking-card input:not([type="checkbox"]),
+  .booking-card select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .booking-card .admin-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+}
+
+/* Animazioni generali */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes expand {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Centrare contenuti tabella desktop */
+.admin-page table td,
+.admin-page table th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+td.action-buttons {
+  display: flex;
+  justify-content: space-between; /* equidistanti tra loro e dai bordi */
+}
+
+
+
+table {
+  border-collapse: collapse; /* elimina doppi bordi */
+}
+
+td.action-buttons button {
+  flex: 1; /* distribuisce lo spazio equamente */
+  max-width: 110px; /* opzionale, se vuoi limitare la dimensione */
+}
+
+.admin-page table td {
+  height: 70px; /* altezza uniforme */
+  vertical-align: middle;
+}
