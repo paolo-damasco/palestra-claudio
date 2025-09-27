@@ -40,14 +40,16 @@ const transporter = nodemailer.createTransport({
 });
 
 // PASSWORD ADMIN da variabile d'ambiente
+
+// PASSWORD ADMIN da variabile d'ambiente
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 // Middleware autenticazione admin
-app.post("/api/admin/login", (req, res) => {
-  const { password } = req.body;
-  if (password === process.env.ADMIN_PASSWORD) res.json({ success: true });
-  else res.status(401).json({ success: false, message: "Password errata" });
-});
+function adminAuth(req, res, next) {
+  const password = req.headers["x-admin-password"];
+  if (password === ADMIN_PASSWORD) next();
+  else res.status(403).json({ success: false, message: "Accesso negato" });
+}
 
 
 // --- API ADMIN ---
