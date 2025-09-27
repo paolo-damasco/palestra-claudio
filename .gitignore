@@ -1,0 +1,11 @@
+# Ignora cartelle node_modules
+backend/node_modules
+frontend/node_modules
+
+# Ignora i lockfile se vuoi che Render rigeneri i pacchetti
+backend/package-lock.json
+frontend/package-lock.json
+
+# Altri file inutili
+.DS_Store
+.env
