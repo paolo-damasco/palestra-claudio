@@ -31,11 +31,11 @@ db.run(`CREATE TABLE IF NOT EXISTS bookings (
 // Nodemailer config con App Password
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  auth: { user: "EMAIL_USER", pass: "EMAIL_PASS" }
+  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
 });
 
 // PASSWORD STATICO ADMIN
-const ADMIN_PASSWORD = "Claudio+";
+const ADMIN_PASSWORD = "process.env.ADMIN_PASSWORD";
 
 // Middleware autenticazione admin
 function adminAuth(req, res, next) {
@@ -45,7 +45,7 @@ function adminAuth(req, res, next) {
 }
 
 // GET tutte le prenotazioni
-app.get("/api/bookings", (req, res) => {
+app.get("/api/bookings", adminAuth, (req, res) => {
   db.all("SELECT * FROM bookings", [], (err, rows) => {
     if (err) return res.json([]);
     res.json(rows);
@@ -165,11 +165,17 @@ app.patch("/api/bookings/:id", adminAuth, (req, res) => {
 });
 
 // Root test
-app.get("/", (req, res) => res.send("Backend palestra funzionante!"));
-
+//app.get("/", (req, res) => res.send("Backend palestra funzionante!"));
 
 // Serve i file statici del frontend
 app.use(express.static(path.join(__dirname, "dist")));
+
+
+// Tutte le altre richieste ritornano index.html (React Router)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
 
 // Avvio server
 app.listen(PORT, () => console.log(`Server avviato su port ${PORT}`));
