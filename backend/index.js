@@ -173,12 +173,12 @@ app.post("/api/bookings", (req, res) => {
 
 // --- FRONTEND REACT ---
 
-// Serve i file statici
-app.use(express.static(path.join(__dirname, "dist")));
+// Serve i file statici del frontend (React build)
+app.use(express.static("dist"));
 
 // Tutte le altre richieste ritornano index.html (React Router)
-app.get("/:path(*)", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+app.use((req, res) => {
+  res.sendFile(path.resolve("dist", "index.html"));
 });
 
 // --- AVVIO SERVER ---
