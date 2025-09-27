@@ -51,6 +51,13 @@ function adminAuth(req, res, next) {
   else res.status(403).json({ success: false, message: "Accesso negato" });
 }
 
+// Endpoint login admin
+app.post("/api/admin/login", (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) res.json({ success: true });
+  else res.status(403).json({ success: false, message: "Password errata" });
+});
+
 
 // --- API ADMIN ---
 
