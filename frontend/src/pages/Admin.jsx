@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 // Costanti
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
 const italianHolidays = [
   "01-01","06-01","25-04","01-05","02-06",
