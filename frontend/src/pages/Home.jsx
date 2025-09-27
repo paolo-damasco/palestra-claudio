@@ -5,7 +5,7 @@ function Home() {
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "manifest";
-    link.href = "/manifest-home.json";
+    link.href = "/manifest.json";
     document.head.appendChild(link);
 
     return () => {
