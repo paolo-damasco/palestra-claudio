@@ -177,8 +177,8 @@ app.post("/api/bookings", (req, res) => {
 app.use(express.static(path.join(__dirname, "dist")));
 
 // Tutte le altre richieste ritornano index.html (React Router)
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+app.get("/:path(*)", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
 
 // --- AVVIO SERVER ---
