@@ -1,5 +1,5 @@
 import React from "react";
-import "../Index.css"; // importa il CSS
+import "../index.css"; // importa il CSS
 
 function Home() {
   return (
