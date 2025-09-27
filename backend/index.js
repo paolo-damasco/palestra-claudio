@@ -35,7 +35,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // PASSWORD STATICO ADMIN
-const ADMIN_PASSWORD = "process.env.ADMIN_PASSWORD";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 // Middleware autenticazione admin
 function adminAuth(req, res, next) {
@@ -45,7 +45,7 @@ function adminAuth(req, res, next) {
 }
 
 // GET tutte le prenotazioni
-app.get("/api/bookings", adminAuth, (req, res) => {
+app.get("/api/bookings", (req, res) => {
   db.all("SELECT * FROM bookings", [], (err, rows) => {
     if (err) return res.json([]);
     res.json(rows);
