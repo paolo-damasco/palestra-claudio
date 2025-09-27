@@ -18,7 +18,7 @@ const db = new sqlite3.Database("./bookings.db", (err) => {
   else console.log("Database connesso.");
 });
 
-// Crea tabella se non esiste, aggiungendo campo pagato (0 = non pagato, 1 = pagato)
+// Crea tabella se non esiste
 db.run(`CREATE TABLE IF NOT EXISTS bookings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome TEXT,
@@ -28,13 +28,16 @@ db.run(`CREATE TABLE IF NOT EXISTS bookings (
   pagato INTEGER DEFAULT 0
 )`);
 
-// Nodemailer config con App Password
+// Nodemailer config con variabili d'ambiente
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
-// PASSWORD STATICO ADMIN
+// PASSWORD ADMIN da variabile d'ambiente
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 // Middleware autenticazione admin
@@ -44,8 +47,10 @@ function adminAuth(req, res, next) {
   else res.status(403).json({ success: false, message: "Accesso negato" });
 }
 
-// GET tutte le prenotazioni
-app.get("/api/bookings", (req, res) => {
+// --- API ADMIN ---
+
+// GET tutte le prenotazioni (solo admin)
+app.get("/api/bookings", adminAuth, (req, res) => {
   db.all("SELECT * FROM bookings", [], (err, rows) => {
     if (err) return res.json([]);
     res.json(rows);
@@ -57,78 +62,6 @@ app.get("/api/bookings/unpaid", adminAuth, (req, res) => {
   db.all("SELECT * FROM bookings WHERE pagato=0", [], (err, rows) => {
     if (err) return res.json([]);
     res.json(rows);
-  });
-});
-
-// POST nuova prenotazione
-app.post("/api/bookings", (req, res) => {
-  const { nome, email, orario, data, sendClientMail, pagato = 0 } = req.body;
-  if (!nome || !email || !orario || !data)
-    return res.json({ success: false, message: "Dati mancanti" });
-
-  const dateStr = data;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const [y, m, d] = dateStr.split("-").map(Number);
-  const selectedDate = new Date(y, m - 1, d);
-  if (selectedDate < today)
-    return res.json({ success: false, message: "Data nel passato" });
-
-  db.get("SELECT * FROM bookings WHERE orario=? AND data=?", [orario, dateStr], (err, row) => {
-    if (err) return res.json({ success: false, message: err.message });
-    if (row) return res.json({ success: false, message: "Slot già prenotato" });
-
-    db.run(
-      "INSERT INTO bookings (nome,email,orario,data,pagato) VALUES (?,?,?,?,?)",
-      [nome, email, orario, dateStr, pagato],
-      function (err) {
-        if (err) return res.json({ success: false, message: err.message });
-
-        const [year, month, day] = dateStr.split("-").map(Number);
-        const [hour, minute] = orario.split(":").map(Number);
-
-        const event = {
-          start: [year, month, day, hour, minute],
-          duration: { hours: 1 },
-          title: "Prenotazione Palestra",
-          description: `Prenotazione di ${nome} alle ${orario}`,
-          status: "CONFIRMED",
-          busyStatus: "BUSY"
-        };
-
-        ics.createEvent(event, (error, value) => {
-          if (error) console.error("Errore ICS:", error);
-
-          if (sendClientMail) {
-            const clientMailOptions = {
-              from: "SClab96@gmail.com",
-              to: email,
-              subject: "Conferma prenotazione palestra",
-              text: `Ciao ${nome}, la tua prenotazione è confermata per il ${dateStr} alle ${orario}.`,
-              icalEvent: { filename: "prenotazione.ics", method: "REQUEST", content: value }
-            };
-            transporter.sendMail(clientMailOptions, (err, info) => {
-              if (err) console.error("Errore invio mail cliente:", err);
-              else console.log("Mail inviata al cliente:", info.response);
-            });
-          }
-
-          const selfMailOptions = {
-            from: "SClab96@gmail.com",
-            to: "sclab96@gmail.com",
-            subject: "Nuova prenotazione palestra",
-            text: `Nuova prenotazione: ${nome}, ${email}, ${dateStr} alle ${orario}`,
-            icalEvent: { filename: "prenotazione.ics", method: "REQUEST", content: value }
-          };
-          transporter.sendMail(selfMailOptions, (err, info) => {
-            if (err) console.error("Errore invio mail rendiconto:", err);
-            else console.log("Mail rendiconto inviata con ICS:", info.response);
-          });
-
-          res.json({ success: true, booking: { id: this.lastID, nome, email, orario, data: dateStr, pagato } });
-        });
-      }
-    );
   });
 });
 
@@ -164,22 +97,89 @@ app.patch("/api/bookings/:id", adminAuth, (req, res) => {
   });
 });
 
-// Root test
-//app.get("/", (req, res) => res.send("Backend palestra funzionante!"));
+// --- API PUBBLICA ---
 
-// Serve i file statici del frontend
+// POST nuova prenotazione
+app.post("/api/bookings", (req, res) => {
+  const { nome, email, orario, data, sendClientMail, pagato = 0 } = req.body;
+  if (!nome || !email || !orario || !data)
+    return res.json({ success: false, message: "Dati mancanti" });
+
+  const dateStr = data;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const selectedDate = new Date(y, m-1, d);
+  if (selectedDate < today)
+    return res.json({ success: false, message: "Data nel passato" });
+
+  db.get("SELECT * FROM bookings WHERE orario=? AND data=?", [orario, dateStr], (err, row) => {
+    if (err) return res.json({ success: false, message: err.message });
+    if (row) return res.json({ success: false, message: "Slot già prenotato" });
+
+    db.run(
+      "INSERT INTO bookings (nome,email,orario,data,pagato) VALUES (?,?,?,?,?)",
+      [nome, email, orario, dateStr, pagato],
+      function(err) {
+        if (err) return res.json({ success: false, message: err.message });
+
+        const [year, month, day] = dateStr.split("-").map(Number);
+        const [hour, minute] = orario.split(":").map(Number);
+
+        const event = {
+          start: [year, month, day, hour, minute],
+          duration: { hours: 1 },
+          title: "Prenotazione Palestra",
+          description: `Prenotazione di ${nome} alle ${orario}`,
+          status: "CONFIRMED",
+          busyStatus: "BUSY"
+        };
+
+        ics.createEvent(event, (error, value) => {
+          if (error) console.error("Errore ICS:", error);
+
+          // Mail cliente
+          if (sendClientMail) {
+            transporter.sendMail({
+              from: process.env.EMAIL_USER,
+              to: email,
+              subject: "Conferma prenotazione palestra",
+              text: `Ciao ${nome}, la tua prenotazione è confermata per il ${dateStr} alle ${orario}.`,
+              icalEvent: { filename: "prenotazione.ics", method: "REQUEST", content: value }
+            }, (err, info) => {
+              if (err) console.error("Errore mail cliente:", err);
+              else console.log("Mail cliente inviata:", info.response);
+            });
+          }
+
+          // Mail admin
+          transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: "Nuova prenotazione palestra",
+            text: `Nuova prenotazione: ${nome}, ${email}, ${dateStr} alle ${orario}`,
+            icalEvent: { filename: "prenotazione.ics", method: "REQUEST", content: value }
+          }, (err, info) => {
+            if (err) console.error("Errore mail admin:", err);
+            else console.log("Mail admin inviata:", info.response);
+          });
+
+          res.json({ success: true, booking: { id: this.lastID, nome, email, orario, data: dateStr, pagato } });
+        });
+      }
+    );
+  });
+});
+
+// --- FRONTEND REACT ---
+
+// Serve i file statici
 app.use(express.static(path.join(__dirname, "dist")));
 
-
 // Tutte le altre richieste ritornano index.html (React Router)
-app.use((req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-
-// Avvio server
+// --- AVVIO SERVER ---
 app.listen(PORT, () => console.log(`Server avviato su port ${PORT}`));
-
-
-
-

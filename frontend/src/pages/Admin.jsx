@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 // Costanti
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
-const ADMIN_PASSWORD = "Claudio+";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const italianHolidays = [
   "01-01","06-01","25-04","01-05","02-06",
@@ -38,6 +38,18 @@ const getAvailableDates = (bookings = []) => {
 };
 
 export default function Admin() {
+
+useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "manifest";
+    link.href = "/manifest-admin.json"; // punta al manifest admin
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
   const [passwordInput, setPasswordInput] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -145,6 +157,13 @@ export default function Admin() {
 
   // Ordina le prenotazioni per data + orario (dal più vicino al più lontano)
   const sortedBookings = [...bookings].sort((a, b) => {
+    const dateTimeA = new Date(`${a.data}T${a.orario}`);
+    const dateTimeB = new Date(`${b.data}T${b.orario}`);
+    return dateTimeA - dateTimeB;
+  });
+
+// Ordina i pagamenti non pagati in ordine cronologico
+  const sortedUnpaid = [...unpaid].sort((a, b) => {
     const dateTimeA = new Date(`${a.data}T${a.orario}`);
     const dateTimeB = new Date(`${b.data}T${b.orario}`);
     return dateTimeA - dateTimeB;
@@ -273,9 +292,9 @@ export default function Admin() {
       {/* Da pagare */}
       <h2>Resoconto pagamenti</h2>
       <div style={{ marginTop: "20px" }}>
-        {unpaid.length === 0 ? <p>Tutti hanno pagato!</p> :
+        {sortedUnpaid.length === 0 ? <p>Tutti hanno pagato!</p> :
           <ul>
-            {unpaid.map(u => <li key={u.id}>{u.nome} - {u.email} - {u.data} alle {u.orario}</li>)}
+            {sortedUnpaid.map(u => <li key={u.id}>{u.nome} - {u.email} - {u.data} alle {u.orario}</li>)}
           </ul>
         }
       </div>

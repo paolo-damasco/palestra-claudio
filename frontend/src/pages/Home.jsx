@@ -1,7 +1,18 @@
-import React from "react";
-import "../index.css"; // importa il CSS
+import React, { useEffect } from "react";
+import "../index.css";
 
 function Home() {
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "manifest";
+    link.href = "/manifest-home.json";
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
   return (
     <div className="home-page fade-anim">
       <h1>Benvenuto da | S&C | Claudio Damasco</h1>
