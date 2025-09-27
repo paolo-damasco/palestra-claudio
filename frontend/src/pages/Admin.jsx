@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 // Costanti
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const italianHolidays = [
   "01-01","06-01","25-04","01-05","02-06",
@@ -87,10 +86,21 @@ useEffect(() => {
       .catch(err => console.error(err));
   };
 
-  const handleLogin = () => {
-    if (passwordInput === ADMIN_PASSWORD) setIsAuthenticated(true);
+  const handleLogin = async () => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: passwordInput })
+    });
+    const data = await res.json();
+    if(data.success) setIsAuthenticated(true);
     else setMessage("Password errata!");
-  };
+  } catch(err) {
+    console.error(err);
+    setMessage("Errore di connessione al server");
+  }
+};
 
   const handleDelete = (id) => {
     fetch(`${BACKEND_URL}/api/bookings/${id}`, { method: "DELETE", headers })

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -41,11 +43,12 @@ const transporter = nodemailer.createTransport({
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 // Middleware autenticazione admin
-function adminAuth(req, res, next) {
-  const password = req.headers["x-admin-password"];
-  if (password === ADMIN_PASSWORD) next();
-  else res.status(403).json({ success: false, message: "Accesso negato" });
-}
+app.post("/api/admin/login", (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.ADMIN_PASSWORD) res.json({ success: true });
+  else res.status(401).json({ success: false, message: "Password errata" });
+});
+
 
 // --- API ADMIN ---
 
@@ -174,12 +177,18 @@ app.post("/api/bookings", (req, res) => {
 // --- FRONTEND REACT ---
 
 // Serve i file statici del frontend (React build)
-app.use(express.static("dist"));
+app.use(express.static(path.join(__dirname, "dist")));
+
 
 // Tutte le altre richieste ritornano index.html (React Router)
 app.use((req, res) => {
-  res.sendFile(path.resolve("dist", "index.html"));
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 // --- AVVIO SERVER ---
 app.listen(PORT, () => console.log(`Server avviato su port ${PORT}`));
+
+console.log("ADMIN_PASSWORD:", process.env.ADMIN_PASSWORD);
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
+console.log("PORT:", process.env.PORT || 5000);
