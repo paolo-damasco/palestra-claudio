@@ -182,21 +182,3 @@ app.listen(PORT, () => console.log(`Server avviato su port ${PORT}`));
 
 
 
-
-const path = require("path");
-
-// Serve i file statici del frontend
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-// Rotta catch-all: manda index.html per il routing di React
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
-});
-
-const path = require("path");
-const DIST_PATH = path.join(__dirname, "..", "frontend", "dist"); // attenzione al path relativo
-app.use(express.static(DIST_PATH));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(DIST_PATH, "index.html"));
-});
-
