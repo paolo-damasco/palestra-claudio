@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
 const nodemailer = require("nodemailer");
 const ics = require("ics");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -166,15 +167,9 @@ app.patch("/api/bookings/:id", adminAuth, (req, res) => {
 // Root test
 app.get("/", (req, res) => res.send("Backend palestra funzionante!"));
 
-const path = require("path");
 
 // Serve i file statici del frontend
 app.use(express.static(path.join(__dirname, "dist")));
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
-});
-
 
 // Avvio server
 app.listen(PORT, () => console.log(`Server avviato su port ${PORT}`));
