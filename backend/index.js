@@ -185,6 +185,15 @@ app.post("/api/bookings", (req, res) => {
 
 // --- FRONTEND REACT ---
 
+// GET prenotazioni pubbliche (solo lettura, per utente normale)
+app.get("/api/bookings/public", (req, res) => {
+  db.all("SELECT id, nome, data, orario, pagato FROM bookings", [], (err, rows) => {
+    if (err) return res.json({ success: false, message: err.message });
+    res.json({ success: true, bookings: rows });
+  });
+});
+
+
 // Serve i file statici del frontend (React build)
 app.use(express.static(path.join(__dirname, "dist")));
 
