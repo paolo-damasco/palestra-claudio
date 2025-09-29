@@ -33,11 +33,14 @@ db.run(`CREATE TABLE IF NOT EXISTS bookings (
 // Nodemailer config con variabili d'ambiente
 const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
-  port: 587,
+  port: 587, // se fallisce, prova 465
   secure: false, // TLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    ciphers: 'SSLv3'
   }
 });
 
