@@ -32,11 +32,14 @@ db.run(`CREATE TABLE IF NOT EXISTS bookings (
 
 // Nodemailer config con variabili d'ambiente
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,          // 465 per SSL, 587 per TLS
+  secure: true,       // true se usi port 465
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  connectionTimeout: 10000  // 10 secondi
 });
 
 transporter.verify((err, success) => {
