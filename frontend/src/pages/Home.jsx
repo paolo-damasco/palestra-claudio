@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <div className="home-page fade-anim">
-      <h1>Benvenuto da | S&C | Claudio Damasco</h1>
+      <h1>Benvenuto da  S&C | Claudio Damasco</h1>
       <p>Preparazioni, valutazioni, programmi personalizzati. Prenota il tuo allenamento!</p>
 
       <div className="home-images">

@@ -44,7 +44,7 @@ function Footer() {
           Tecnologie utilizzate: React, Vite, TailwindCSS
         </p>
 <p>
-        <a href="/admin" style={{ color: "#007bff", textDecoration: "underline" }}>
+        <a href="/admin">
           Sono un Admin
         </a>
       </p>
