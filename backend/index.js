@@ -39,6 +39,12 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+transporter.verify((err, success) => {
+  if (err) console.error("Errore transporter:", err);
+  else console.log("Server pronto per invio mail:", success);
+});
+
+
 // PASSWORD ADMIN da variabile d'ambiente
 
 // PASSWORD ADMIN da variabile d'ambiente
