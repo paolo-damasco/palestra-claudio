@@ -34,10 +34,10 @@ function Navbar() {
 
       {/* Hamburger */}
       <div className="hamburger" onClick={toggleMenu}>
-        <div style={{ transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
-        <div style={{ opacity: menuOpen ? 0 : 1 }} />
-        <div style={{ transform: menuOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
-      </div>
+  <span className={`line ${menuOpen ? "open top" : ""}`} />
+  <span className={`line ${menuOpen ? "open middle" : ""}`} />
+  <span className={`line ${menuOpen ? "open bottom" : ""}`} />
+</div>
 
       {/* Mobile menu fullscreen */}
       <div className={`navbar-links-mobile ${menuOpen ? "open" : ""}`}>

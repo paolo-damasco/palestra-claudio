@@ -75,16 +75,24 @@ useEffect(() => {
   const fetchBookings = () => {
     setLoading(true);
     fetch(`${BACKEND_URL}/api/bookings`, { headers })
-      .then(res => res.json())
-      .then(data => { setBookings(data); setLoading(false); })
-      .catch(err => { console.error(err); setLoading(false); });
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return res.json();
+  })
+  .then(data => { setBookings(data); setLoading(false); })
+  .catch(err => { console.error("Errore fetch bookings:", err); setLoading(false); });
+
   };
 
   const fetchUnpaid = () => {
     fetch(`${BACKEND_URL}/api/bookings/unpaid`, { headers })
-      .then(res => res.json())
-      .then(data => setUnpaid(data))
-      .catch(err => console.error(err));
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return res.json();
+  })
+  .then(data => setUnpaid(data))
+  .catch(err => console.error("Errore fetch unpaid:", err));
+
   };
 
   const handleLogin = async () => {
@@ -102,6 +110,7 @@ useEffect(() => {
     setMessage("Errore di connessione al server");
   }
 };
+
 
   const handleDelete = (id) => {
     fetch(`${BACKEND_URL}/api/bookings/${id}`, { method: "DELETE", headers })
@@ -132,8 +141,8 @@ useEffect(() => {
     }
     fetch(`${BACKEND_URL}/api/bookings`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newBooking)
+      headers: { "Content-Type": "application/json", "x-admin-password": ADMIN_PASSWORD },
+  body: JSON.stringify(newBooking)
     })
       .then(res => res.json())
       .then(() => {
@@ -199,11 +208,16 @@ useEffect(() => {
             </option>
           )}
         </select>
-        <label className="checkbox-label">
-          Pagato
-          <input type="checkbox" checked={newBooking.pagato === 1} 
-                 onChange={e => setNewBooking({...newBooking, pagato:e.target.checked ? 1:0})} />
-        </label>
+       <label className="checkbox-label">
+  Pagato
+  <input
+    type="checkbox"
+    checked={newBooking.pagato === 1}
+    onChange={e => setNewBooking({...newBooking, pagato: e.target.checked ? 1:0})}
+  />
+</label>
+
+
 
         <button className="btn-book" onClick={handleAddBooking}>Aggiungi</button>
       </div>
@@ -284,8 +298,7 @@ useEffect(() => {
               </select>
               <label className="checkbox-label">
                 Pagato
-                <input type="checkbox" checked={newBooking.pagato === 1} 
-                       onChange={e => setNewBooking({...newBooking, pagato:e.target.checked ? 1:0})} />
+                <input type="checkbox" checked={b.pagato === 1} onChange={e => handleUpdate(b.id, {pagato:e.target.checked ? 1:0})} />
               </label>
 
               <div className="admin-buttons">

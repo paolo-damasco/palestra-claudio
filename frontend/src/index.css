@@ -43,16 +43,34 @@ a {
 /* Uniforma il font dei placeholder in tutti i campi */
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  font-family: 'Montserrat', sans-serif; /* lo stesso font dei campi */
-  color: #aaa; /* opzionale, colore simile agli altri placeholder */
-  font-weight: 400; /* opzionale, stesso peso del testo normale */
+  font-family: 'Montserrat', sans-serif;
+  color: #aaa;
+  font-weight: 400;
 }
+
 
 .message {
   font-family: 'Montserrat', sans-serif; /* stesso font degli altri testi */
   font-size: 16px;
   line-height: 1.5;
 }
+
+.contact-form input,
+.contact-form textarea {
+  font-family: 'Montserrat', sans-serif;  /* stesso font di tutto il form */
+  font-size: 1rem;
+  color: #1c1b29;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+}
+
+.contact-form textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
 
 
 /* ---------- NAVBAR ---------- */
@@ -101,17 +119,52 @@ a {
 }
 
 .hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
+  width: 30px;           /* dimensione hamburger */
+  height: 22px;
+  position: relative;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .hamburger div {
-  width: 25px;
+  width: 24px;
+  height: 18px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+.hamburger .line {
   height: 3px;
-  background-color: white;
+  width: 100%;
+  background: white;
+  border-radius: 2px;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Effetto apertura (X) */
+.hamburger .line.middle.open {
+  opacity: 0; /* sparisce la linea centrale */
+}
+
+.hamburger .line.top.open {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: rotate(45deg);
+}
+
+.hamburger .line.bottom.open {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: rotate(-45deg);
 }
 
 .navbar-links-mobile {
@@ -123,7 +176,6 @@ a {
   background-color: #1c1b29;
   width: 200px;
   border-radius: 8px;
-  padding: 1rem;
   gap: 1rem;
   opacity: 0;
   transform: translateX(100%);
@@ -136,14 +188,52 @@ a {
   transform: translateX(0);
 }
 
-@media (max-width: 768px) {
+/* Desktop: >= 768px */
+@media (min-width: 768px) {
   .navbar-links {
-    display: none;
+    display: flex; /* mostra link desktop */
   }
   .hamburger {
-    display: flex;
+    display: none; /* nasconde hamburger su desktop */
+  }
+  .navbar-links-mobile {
+    display: none; /* nasconde overlay mobile su desktop */
   }
 }
+
+/* Mobile: < 768px */
+@media (max-width: 767px) {
+  .navbar-links {
+    display: none; /* nasconde link desktop */
+  }
+  .hamburger {
+    display: flex; /* mostra hamburger */
+  }
+  .navbar-links-mobile {
+    display: flex; /* overlay mobile */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(28, 27, 41, 0.95);
+    gap: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 9999;
+  }
+
+  .navbar-links-mobile.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+}
+
 
 /* Overlay fullscreen hamburger */
 .navbar-links-mobile.overlay {

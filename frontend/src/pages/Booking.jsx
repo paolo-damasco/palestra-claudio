@@ -14,10 +14,10 @@ export default function Booking() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${BACKEND_URL}/api/bookings`)
+    fetch(`${BACKEND_URL}/api/bookings/public`)
       .then(res => res.json())
       .then(data => {
-        setBookings(Array.isArray(data) ? data : []);
+        setBookings(Array.isArray(data.bookings) ? data.bookings : []);
         setLoading(false);
       })
       .catch(err => {
@@ -42,7 +42,7 @@ export default function Booking() {
     fetch(`${BACKEND_URL}/api/bookings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, orario, data, sendClientMail })
+      body: JSON.stringify({ nome, email, orario, data, sendClientMail:true })
     })
     .then(res => res.json())
     .then(data => {

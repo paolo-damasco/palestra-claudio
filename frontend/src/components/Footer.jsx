@@ -30,17 +30,24 @@ function Footer() {
 
         {/* Contatto sviluppatore */}
         <p className="credits">
-          Sito a cura di Paolo Damasco | {" "}
-          <a
-            href="https://www.instagram.com/paolo_damasco22/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaInstagram style={{ marginRight: "0.3rem" }} /> @paolo_damasco22
-          </a>
+          Web App a cura di Paolo Damasco | {" "}
+         <a
+  href="https://www.instagram.com/paolo_damasco22/"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}
+>
+  <FaInstagram style={{ marginRight: "0.3rem" }} /> @paolo_damasco22
+</a>
+
           <br />
           Tecnologie utilizzate: React, Vite, TailwindCSS
         </p>
+<p>
+        <a href="/admin" style={{ color: "#007bff", textDecoration: "underline" }}>
+          Sono un Admin
+        </a>
+      </p>
       </div>
     </footer>
   );
